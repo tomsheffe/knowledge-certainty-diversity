@@ -13,7 +13,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-from common import (load_bot_bot_duo, load_bot_bot_trio, load_medcom1, load_medcom1_trios, load_medcom2,
+from common import (load_bot_bot_duo, load_bot_bot_trio, load_exp3_human, load_exp3_human_trios, load_exp4_human_llm,
                     aggregate_questions, aggregate_by_rebel_conf, aggregate_bot_group_data,
                     get_rank_accuracies, multi_confidence_pcs, paired_sign_test)
 from plotting import (plot_diversity_plots, plot_agent_accuracies,
@@ -171,10 +171,10 @@ def make_figure_2():
 
 def make_figure_3():
     print("Figure 3 (human trios + human-LLM pairs)...")
-    df4 = load_medcom2()
-    group_summary3, subj3 = load_medcom1(0.62)
+    df4 = load_exp4_human_llm()
+    group_summary3, subj3 = load_exp3_human(0.62)
     interv3 = subj3[subj3['control'] == 0]          # individual-level (panel D)
-    _, trios_all3 = load_medcom1_trios()             # trio-level, all members (panel B)
+    _, trios_all3 = load_exp3_human_trios()             # trio-level, all members (panel B)
     agg_q3 = aggregate_questions(trios_all3)
     agg_conf3 = aggregate_by_rebel_conf(agg_q3)
     rank_acc3 = get_rank_accuracies(interv3)
@@ -230,9 +230,9 @@ def make_figure_s5():
     parsed1, _ = load_bot_bot_duo()
     raw2, parsed2 = load_bot_bot_trio()
     agg_q2 = aggregate_questions(parsed2)
-    _, trios_all3 = load_medcom1_trios()             # trio-level: all members
+    _, trios_all3 = load_exp3_human_trios()             # trio-level: all members
     agg_q3 = aggregate_questions(trios_all3)
-    df4 = load_medcom2()
+    df4 = load_exp4_human_llm()
     # Trios: only 2-1 split items have a rebel and a coalition; the full item
     # count is the denominator N, exactly as in fig_s5_multiconfidence.py, so
     # the panel titles match the values reported in Table 2.
@@ -303,7 +303,7 @@ def make_figure_s8():
 
 def make_figure_s9():
     print("Fig. S9 (worse-agent perspective)...")
-    df4 = load_medcom2()
+    df4 = load_exp4_human_llm()
     swapped = df4.rename(columns={
         'best_agent_confidence': '_tmp_bc', 'second_agent_confidence': 'best_agent_confidence',
         'best_agent_correct_before': '_tmp_bcb', 'second_agent_correct_before': 'best_agent_correct_before',

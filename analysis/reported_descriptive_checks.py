@@ -30,7 +30,7 @@ def main():
     rho, p = spearmanr(per.initial_ms + per.final_ms, per.post - per.pre)
     print(f'Exp 4 total active time vs human gain: rho={rho:.4f}, p={p:.5f}, n={len(per)}')
 
-    h = pd.read_csv(ROOT / 'data/medcom1_fulldata.csv')
+    h = pd.read_csv(ROOT / 'data/exp3_human_trios.csv')
     per = h.groupby(['control', 'group_num', 'subject']).agg(
         initial_ms=('rt_start', 'sum'), final_ms=('rt_end', 'sum'),
         pre=('ans_start_correct', 'mean'), post=('ans_end_correct', 'mean'))

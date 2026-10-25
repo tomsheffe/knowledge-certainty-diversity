@@ -33,8 +33,8 @@ agent. Speaker names inside bubbles are gone; the avatar and the side do
 that work. Icons are drawn from matplotlib primitives so the figure has no
 external assets.
 
-Sources. Exp 4 numerical outcomes: ../data/medcom2_bot_post_conversation_updated.csv.
-Exp 3 answers and confidence: ../data/medcom1_fulldata.csv. Released Hebrew
+Sources. Exp 4 numerical outcomes: ../data/exp4_human_llm_discussions.csv.
+Exp 3 answers and confidence: ../data/exp3_human_trios.csv. Released Hebrew
 transcripts: ../data/conversations/experiment3.csv and experiment4.csv.
 The translated excerpts are embedded below.
 
@@ -70,8 +70,8 @@ import pandas as pd
 from matplotlib.patches import Circle, FancyBboxPatch, Polygon, Wedge
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA4 = os.path.join(HERE, '..', 'data', 'medcom2_bot_post_conversation_updated.csv')
-DATA3 = os.path.join(HERE, '..', 'data', 'medcom1_fulldata.csv')
+DATA4 = os.path.join(HERE, '..', 'data', 'exp4_human_llm_discussions.csv')
+DATA3 = os.path.join(HERE, '..', 'data', 'exp3_human_trios.csv')
 OUT_DIR = os.path.join(HERE, '..', 'outputs', 'figures')
 
 plt.rcParams['font.sans-serif'] = ['Avenir Next', 'Avenir', 'Helvetica Neue', 'Helvetica', 'DejaVu Sans']
@@ -545,8 +545,8 @@ def main():
             for p in PANELS]
     with open(cap_path, 'w') as f:
         f.write(caption + '\n\nSources: ' + '; '.join(bits)
-                + '. Experiment 4 panels from medcom2_bot_post_conversation_updated.csv; '
-                  'Experiment 3 panel from medcom1_fulldata.csv (answers and confidence) '
+                + '. Experiment 4 panels from exp4_human_llm_discussions.csv; '
+                  'Experiment 3 panel from exp3_human_trios.csv (answers and confidence) '
                   'and data/conversations/experiment3.csv (transcript).\n')
 
     print(f'written to {out}')

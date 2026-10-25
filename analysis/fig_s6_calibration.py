@@ -10,7 +10,7 @@ Fig. S6 panels).
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
-from common import load_medcom1, load_medcom2, load_bot_bot_duo, load_bot_bot_trio
+from common import load_exp3_human, load_exp4_human_llm, load_bot_bot_duo, load_bot_bot_trio
 
 
 def per_level_accuracy(conf, correct, levels=(1, 2, 3, 4, 5)):
@@ -22,7 +22,7 @@ def per_level_accuracy(conf, correct, levels=(1, 2, 3, 4, 5)):
 def run():
     results = {}
 
-    _, subj3 = load_medcom1(0.62)
+    _, subj3 = load_exp3_human(0.62)
     results['human_exp3'] = (spearmanr(subj3['conf_val_start'], subj3['ans_start_correct']),
                              per_level_accuracy(subj3['conf_val_start'], subj3['ans_start_correct']))
 

@@ -6,9 +6,9 @@ The files in this directory are release copies of the finalized analysis inputs.
 | --- | --- |
 | `exp1_llm_duo_per_group.csv` | Finalized Experiment 1 model-pair results; includes the corrected extraction of USMLE initial answers. |
 | `exp2_llm_trio.csv` | Experiment 2 trio records. |
-| `medcom1_fulldata.csv` | Experiment 3 individual responses, including intervention and no-discussion controls. Participant/group IDs are replaced consistently; group suffix `i`/`c` preserves condition. |
-| `medcom2_fulldata.csv` | All 1,550 instances in the Experiment 4 main arm. The historical `group=control` label denotes that arm; it does not mean that these participants had no discussion. |
-| `medcom2_bot_post_conversation_updated.csv` | 562 discussion records; the analysis loader applies its confidence completeness rule to obtain 561. `release_participant` links each record to the anonymous participant in the full table. |
+| `exp3_human_trios.csv` | Experiment 3 individual responses, including intervention and no-discussion controls. Participant/group IDs are replaced consistently; group suffix `i`/`c` preserves condition. |
+| `exp4_human_llm_responses.csv` | All 1,550 instances in the Experiment 4 analysis cohort. The redundant constant study-arm column is omitted. |
+| `exp4_human_llm_discussions.csv` | 562 discussion records; the analysis loader applies its confidence completeness rule to obtain 561. `release_participant` links each record to the anonymous participant in the full table. The redundant constant study-arm column is omitted. |
 | `temperature_robustness/` | Saved records used for temperature replications; T=0.8 `trio_temp08.csv` contains the older single-model export and is not the three-model source for S1/S2. |
 | `fig_s8_midtier/` | Model-pair mid-tier replications. The corresponding trio records are in `derived_data/`. |
 | `rerun_results/` | Additional saved question-set replications; retained configuration files contain model identifiers only. |
@@ -26,6 +26,6 @@ The Experiment 3 transcript export contains 41 questions for each of ten trios (
 
 ## Experiment 4 cohort reconciliation
 
-The response file contains 31 participants in the main (`control`-labelled) arm and 35 in the other arm. A separate enrollment/demographics export labels the same 66 participants as 32 and 34: one participant is assigned to different arms in the two exports. The release follows the response-file arm labels used by the finalized analysis and does not reassign that participant or invent missing responses. This yields 31 participants with responses, 30 with qualifying discussions, and one with none. Enrollment counts and analysis counts should not be treated as interchangeable; the historical arm discrepancy remains unresolved.
+The original response export contains 31 participants in the main analysis arm and 35 in the other arm. A separate enrollment/demographics export labels the same 66 participants as 32 and 34: one participant is assigned to different arms in the two exports. The release follows the response-file cohort used by the finalized analysis and does not reassign that participant or invent missing responses. The two main Experiment 4 tables contain only this cohort, yielding 31 participants with responses, 30 with qualifying discussions, and one with none; their constant arm labels are omitted. Enrollment counts and analysis counts should not be treated as interchangeable; the historical arm discrepancy remains unresolved.
 
 LLM item IDs and speaking order were recovered from the same source rows after checking exact equality of every previously released analytical column. Upstream IDs are populated only when saved in the source document (including MedBullets URL qid); no IDs were inferred from row numbers.

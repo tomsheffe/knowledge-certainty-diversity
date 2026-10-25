@@ -2,7 +2,7 @@
 """
 import numpy as np
 from scipy.stats import ttest_rel, ttest_ind
-from common import (load_medcom1, load_medcom1_trios, get_rank_accuracies, aggregate_questions,
+from common import (load_exp3_human, load_exp3_human_trios, get_rank_accuracies, aggregate_questions,
                     aggregate_by_rebel_conf, trio_diversity_gain, paired_sign_test)
 
 N_BOOT, SEED = 2000, 0
@@ -10,7 +10,7 @@ N_BOOT, SEED = 2000, 0
 
 def run(filter_threshold=0.62):
     results = {}
-    group_summary, subjects = load_medcom1(filter_threshold)
+    group_summary, subjects = load_exp3_human(filter_threshold)
 
     interv = subjects[subjects['control'] == 0]
     control = subjects[subjects['control'] == 1]
@@ -84,8 +84,8 @@ def run(filter_threshold=0.62):
         t, len(imp_best_i) + len(imp_best_c) - 2, p
 
     # Rebel/coalition diversity (Fig 3B) — trio-level, so ALL THREE members
-    # of each discussion trio (see load_medcom1_trios; decided 2026-09-15).
-    _, trios_all = load_medcom1_trios()
+    # of each discussion trio (see load_exp3_human_trios; decided 2026-09-15).
+    _, trios_all = load_exp3_human_trios()
     results['n_trio_members'] = trios_all['subject'].nunique()
     agg_q = aggregate_questions(trios_all)
     agg_conf = aggregate_by_rebel_conf(agg_q)

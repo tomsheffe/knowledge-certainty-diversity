@@ -26,8 +26,8 @@ from scipy.stats import pearsonr, spearmanr
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(HERE, '..', 'outputs')
-from common import (load_bot_bot_duo, load_bot_bot_trio, load_medcom1_trios,
-                    load_medcom2, aggregate_questions,
+from common import (load_bot_bot_duo, load_bot_bot_trio, load_exp3_human_trios,
+                    load_exp4_human_llm, aggregate_questions,
                     aggregate_bot_group_data)
 from pcs_setting_level_cv import pcs
 
@@ -88,10 +88,10 @@ def build():
     maj2 = dict(enumerate(aggregate_bot_group_data(raw2)['premajority']))
     rows += trios(s2, 'Exp 2: LLM trio', unit_of=bench, maj_of=maj2)
     pooled += trios(s2, 'Exp 2: LLM trio', maj_of=maj2)
-    _, s3 = load_medcom1_trios()
+    _, s3 = load_exp3_human_trios()
     rows += trios(s3, 'Exp 3: human trios')
     pooled += trios(s3, 'Exp 3: human trios', unit_of={q: 'all' for q in s3['question_number'].unique()})
-    d4 = load_medcom2()
+    d4 = load_exp4_human_llm()
     rows += pairs(d4, 'participant_id', 'Exp 4: human-LLM pairs')
     pooled += pairs(d4.assign(all_items=1), 'all_items', 'Exp 4: human-LLM pairs')
     return pd.DataFrame(rows), pd.DataFrame(pooled)

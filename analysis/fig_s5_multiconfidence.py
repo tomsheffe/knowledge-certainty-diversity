@@ -7,7 +7,7 @@ The finalized figure pipeline uses 'max'. Values are computed from the
 packaged data rather than repeated as hardcoded numerical summaries.
 """
 import numpy as np
-from common import (load_bot_bot_duo, load_bot_bot_trio, load_medcom1, load_medcom1_trios, load_medcom2,
+from common import (load_bot_bot_duo, load_bot_bot_trio, load_exp3_human, load_exp3_human_trios, load_exp4_human_llm,
                     aggregate_questions, multi_confidence_pcs)
 
 
@@ -36,7 +36,7 @@ def run():
         results[f'exp2_{baseline}'] = gain * 100
 
     # --- Exp 3: human trios (reference = rebel) ---
-    _, trios_all3 = load_medcom1_trios()             # trio-level: all members (2026-09-15)
+    _, trios_all3 = load_exp3_human_trios()             # trio-level: all members (2026-09-15)
     agg_q3 = aggregate_questions(trios_all3)
     _c3 = agg_q3[agg_q3['has_coalition']]
     for baseline in ['rebel', 'max']:
@@ -48,7 +48,7 @@ def run():
         results[f'exp3_{baseline}'] = gain * 100
 
     # --- Exp 4: human-LLM pairs (reference = best agent) ---
-    df4 = load_medcom2()
+    df4 = load_exp4_human_llm()
     for baseline in ['rebel', 'max']:
         gain, _ = multi_confidence_pcs(
             df4['best_agent_confidence'], df4['best_agent_correct_before'],

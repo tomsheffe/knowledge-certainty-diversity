@@ -16,8 +16,8 @@ split by question_number is not the same as an early/late split by time and
 this check is only weak evidence either way -- flagged in the printed
 output rather than glossed over.
 
-Timing columns: medcom1_fulldata.csv's rt_start/rt_end and
-medcom2_fulldata.csv's init_rt/final_rt are per-item response latencies in
+Timing columns: exp3_human_trios.csv's rt_start/rt_end and
+exp4_human_llm_responses.csv's init_rt/final_rt are per-item response latencies in
 milliseconds (time from item shown to answer submitted), not session-level
 timestamps. Summing them per participant gives active on-task time, a lower
 bound on true elapsed session time (it excludes reading instructions and any
@@ -37,7 +37,7 @@ def _iqr(s):
 
 
 def exp3_timing():
-    d = pd.read_csv(os.path.join(DATA_DIR, 'medcom1_fulldata.csv'))
+    d = pd.read_csv(os.path.join(DATA_DIR, 'exp3_human_trios.csv'))
     per = d.groupby('subject').agg(n=('question_number', 'count'),
                                     pre_ms=('rt_start', 'sum'),
                                     post_ms=('rt_end', 'sum'))
@@ -48,13 +48,9 @@ def exp3_timing():
 
 
 def exp4_timing():
-    d = pd.read_csv(os.path.join(DATA_DIR, 'medcom2_fulldata.csv'))
-    # The paper's Experiment 4 sample is doc.group == 'control' in the
-    # pre-filtered analysis file (see exp4_human_llm.py docstring); the
-    # 'intervention' rows in this raw file are a separate, unused cohort
-    # and are excluded here so the timing numbers describe the actual
-    # analysis sample, not an unrelated group.
-    c = d[d['group'] == 'control'].copy()
+    d = pd.read_csv(os.path.join(DATA_DIR, 'exp4_human_llm_responses.csv'))
+    # All released rows belong to the Experiment 4 analysis cohort.
+    c = d.copy()
     per = c.groupby('participant').agg(n=('question_number', 'count'),
                                     init_ms=('init_rt', 'sum'),
                                     final_ms=('final_rt', 'sum'))
@@ -99,7 +95,7 @@ if __name__ == '__main__':
     print(r['exp3_position'].to_string())
     print()
 
-    print("=== Experiment 4 (human-LLM pairs, paper's 'control'-labeled analysis arm): ===")
+    print("=== Experiment 4 (human-LLM pairs): ===")
     per4 = r['exp4_per_participant']
     for col, label in [('init_min', 'Phase 1: solo answers (50 items)'),
                        ('final_min', 'Phase 2: conversation + final answer (50 items)'),

@@ -8,8 +8,8 @@ import os
 import numpy as np
 import pandas as pd
 
-from common import (load_bot_bot_duo, load_bot_bot_trio, load_medcom1_trios,
-                    load_medcom2, aggregate_questions)
+from common import (load_bot_bot_duo, load_bot_bot_trio, load_exp3_human_trios,
+                    load_exp4_human_llm, aggregate_questions)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(HERE, '..', 'outputs')
@@ -75,8 +75,8 @@ def _prep_trios(load_subjects):
 SETTINGS = [
     ('Exp 1: LLM-LLM pairs', lambda: _prep_pairs(lambda: load_bot_bot_duo()[0])),
     ('Exp 2: LLM trios', lambda: _prep_trios(lambda: load_bot_bot_trio()[1])),
-    ('Exp 3: human trios', lambda: _prep_trios(lambda: load_medcom1_trios()[1])),
-    ('Exp 4: human-LLM pairs', lambda: _prep_pairs(load_medcom2)),
+    ('Exp 3: human trios', lambda: _prep_trios(lambda: load_exp3_human_trios()[1])),
+    ('Exp 4: human-LLM pairs', lambda: _prep_pairs(load_exp4_human_llm)),
 ]
 
 

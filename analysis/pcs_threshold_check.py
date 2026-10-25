@@ -22,8 +22,8 @@ import os
 import numpy as np
 import pandas as pd
 
-from common import (load_bot_bot_duo, load_bot_bot_trio, load_medcom1_trios,
-                    load_medcom2, aggregate_questions)
+from common import (load_bot_bot_duo, load_bot_bot_trio, load_exp3_human_trios,
+                    load_exp4_human_llm, aggregate_questions)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(HERE, '..', 'outputs')
@@ -33,7 +33,7 @@ def items():
     """One row per item: setting, group, direction, c, a_R, a_P, eligible."""
     frames = []
     d1, _ = load_bot_bot_duo()
-    d4 = load_medcom2()
+    d4 = load_exp4_human_llm()
     for label, d, unit in [('Exp 1: LLM pairs', d1, 'group'),
                            ('Exp 4: human-LLM pairs', d4, 'participant_id')]:
         frames.append(pd.DataFrame(dict(
@@ -44,7 +44,7 @@ def items():
             ok=True)))
     raw2, s2 = load_bot_bot_trio()
     bench = dict(enumerate(raw2['dataset_name']))
-    _, s3 = load_medcom1_trios()
+    _, s3 = load_exp3_human_trios()
     for label, s, unit_of in [('Exp 2: LLM trio', s2, bench), ('Exp 3: human trios', s3, None)]:
         a = aggregate_questions(s)
         frames.append(pd.DataFrame(dict(

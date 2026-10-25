@@ -4,8 +4,8 @@ supplementary analyses. These functions do not modify input files.
 Packaged inputs in ../data/ (see ../data/PROVENANCE.md):
   exp1_llm_duo_per_group.csv: finalized Experiment 1 model-pair results.
   exp2_llm_trio.csv: Experiment 2 model-trio results.
-  medcom1_fulldata.csv: Experiment 3 human-trio and control responses.
-  medcom2_bot_post_conversation_updated.csv: Experiment 4 discussion records.
+  exp3_human_trios.csv: Experiment 3 human-trio and control responses.
+  exp4_human_llm_discussions.csv: Experiment 4 discussion records.
 
 Temperature replications are in ../data/temperature_robustness/.
 The completed three-model S1/S2 calibration records are in
@@ -22,8 +22,8 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data'
 # Experiment 3 (human trios) preprocessing
 # ---------------------------------------------------------------------------
 
-def _aggregate_group_data(medcom1_raw_data):
-    group_data = medcom1_raw_data.groupby(['group_num', 'question_number']).agg(
+def _aggregate_group_data(exp3_human_raw_data):
+    group_data = exp3_human_raw_data.groupby(['group_num', 'question_number']).agg(
         premajority=('ans_start_correct', lambda x: int(x.sum() > (len(x) / 2))),
         postmajority=('ans_end_correct', lambda x: int(x.sum() > (len(x) / 2)))
     ).reset_index()
@@ -36,8 +36,8 @@ def _aggregate_group_data(medcom1_raw_data):
     return group_mean
 
 
-def _add_subject_rank(medcom1_raw_data):
-    subject_avg = medcom1_raw_data.groupby(['group_num', 'subject'])['ans_start_correct'] \
+def _add_subject_rank(exp3_human_raw_data):
+    subject_avg = exp3_human_raw_data.groupby(['group_num', 'subject'])['ans_start_correct'] \
         .mean().reset_index(name='avg_ans_start')
 
     def assign_rank(group):
@@ -58,8 +58,8 @@ def _add_subject_rank(medcom1_raw_data):
         return group_sorted[['group_num', 'subject', 'rank']]
 
     rank_df = subject_avg.groupby('group_num').apply(assign_rank).reset_index(drop=True)
-    medcom1_raw_data = medcom1_raw_data.merge(rank_df, on=['group_num', 'subject'], how='left')
-    return medcom1_raw_data.rename(columns={'rank': 'subject_rank'})
+    exp3_human_raw_data = exp3_human_raw_data.merge(rank_df, on=['group_num', 'subject'], how='left')
+    return exp3_human_raw_data.rename(columns={'rank': 'subject_rank'})
 
 
 def _filter_threshold(df, threshold):
@@ -68,20 +68,20 @@ def _filter_threshold(df, threshold):
     return df[df['subject'].isin(valid_subjects)]
 
 
-def pre_process_medcom1(medcom1_raw_data, filter_threshold=0.62):
+def pre_process_exp3_human(exp3_human_raw_data, filter_threshold=0.62):
     """Compute group summaries and retain individuals meeting the accuracy threshold."""
-    medcom1_group_summary = _aggregate_group_data(medcom1_raw_data)
-    medcom1_processed = _add_subject_rank(medcom1_raw_data)
-    medcom1_processed_filtered = _filter_threshold(medcom1_processed, filter_threshold)
-    return medcom1_group_summary, medcom1_processed_filtered
+    exp3_human_group_summary = _aggregate_group_data(exp3_human_raw_data)
+    exp3_human_processed = _add_subject_rank(exp3_human_raw_data)
+    exp3_human_processed_filtered = _filter_threshold(exp3_human_processed, filter_threshold)
+    return exp3_human_group_summary, exp3_human_processed_filtered
 
 
-def load_medcom1(filter_threshold=0.62):
-    raw = pd.read_csv(os.path.join(DATA_DIR, 'medcom1_fulldata.csv'))
-    return pre_process_medcom1(raw, filter_threshold)
+def load_exp3_human(filter_threshold=0.62):
+    raw = pd.read_csv(os.path.join(DATA_DIR, 'exp3_human_trios.csv'))
+    return pre_process_exp3_human(raw, filter_threshold)
 
 
-def load_medcom1_trios():
+def load_exp3_human_trios():
     """Exp 3 discussion trios with ALL THREE original members (no accuracy
     exclusion), for trio-level analyses: rebel/coalition split, PCS, Fig. 3B,
     the Exp 3 column of Table 2, Fig. S5, and the partners in Fig. S7.
@@ -100,7 +100,7 @@ def load_medcom1_trios():
 
     Returns (group_summary, subjects) with subjects restricted to the
     discussion condition."""
-    group_summary, subjects = load_medcom1(filter_threshold=0.0)
+    group_summary, subjects = load_exp3_human(filter_threshold=0.0)
     return group_summary, subjects[subjects['control'] == 0]
 
 
@@ -123,8 +123,8 @@ def _add_participant_id(df):
     return df
 
 
-def _assign_agent_columns(medcom2_df):
-    df = medcom2_df.copy()
+def _assign_agent_columns(exp4_human_llm_df):
+    df = exp4_human_llm_df.copy()
     participant_acc = df.groupby('participant_id').agg(
         mean_user_acc=('user_before_correct', 'mean'),
         mean_bot_acc=('bot_before_correct', 'mean')
@@ -168,8 +168,8 @@ def _assign_agent_columns(medcom2_df):
     return df
 
 
-def load_medcom2():
-    raw = pd.read_csv(os.path.join(DATA_DIR, 'medcom2_bot_post_conversation_updated.csv'))
+def load_exp4_human_llm():
+    raw = pd.read_csv(os.path.join(DATA_DIR, 'exp4_human_llm_discussions.csv'))
     df = _add_participant_id(raw)
     return _assign_agent_columns(df)
 
@@ -528,17 +528,17 @@ def multi_confidence_pcs(ref_conf, ref_acc, partner_conf, partner_acc, levels=(1
     }
 
 
-def build_switch_dataframe(medcom1_subjects, medcom2_df, bot_bot_duo_parsed, bot_bot_bot_parsed,
-                           medcom1_include_subjects=None):
+def build_switch_dataframe(exp3_human_subjects, exp4_human_llm_df, bot_bot_duo_parsed, bot_bot_bot_parsed,
+                           exp3_human_include_subjects=None):
     """Row-level (agent, context, switched, disagreed, conf, other_correct)
     table across all four experiments, for the confidence-sensitive-switching
     analysis (Fig. S7).
 
-    medcom1_include_subjects: optional set of Exp 3 subject ids. When given,
+    exp3_human_include_subjects: optional set of Exp 3 subject ids. When given,
     only these participants contribute their OWN switching rows (switching is
     an individual-level behaviour, so the accuracy exclusion applies), while
     partners' initial answers are taken from every member of the trio
-    (pass `load_medcom1_trios()` subjects as medcom1_subjects). Added
+    (pass `load_exp3_human_trios()` subjects as exp3_human_subjects). Added
     2026-09-15; previously `subj3` was passed unfiltered, which pooled the
     no-discussion controls into the Human-trio row.
     """
@@ -552,9 +552,9 @@ def build_switch_dataframe(medcom1_subjects, medcom2_df, bot_bot_duo_parsed, bot
     records = []
 
     # 1. human - trio (Exp 3)
-    for _, grp in medcom1_subjects.groupby(['group_num', 'question_number']):
+    for _, grp in exp3_human_subjects.groupby(['group_num', 'question_number']):
         for idx, row in grp.iterrows():
-            if medcom1_include_subjects is not None and row['subject'] not in medcom1_include_subjects:
+            if exp3_human_include_subjects is not None and row['subject'] not in exp3_human_include_subjects:
                 continue
             partners = grp.loc[grp.index != idx, 'ans_start'].tolist()
             partners_correct = grp.loc[grp.index != idx, 'ans_start_correct'].tolist()
@@ -562,14 +562,14 @@ def build_switch_dataframe(medcom1_subjects, medcom2_df, bot_bot_duo_parsed, bot
                                         partners, partners_correct, 'Human', 'trio'))
 
     # 2. human - duo (Exp 4, human's own switching)
-    for _, r in medcom2_df.iterrows():
+    for _, r in exp4_human_llm_df.iterrows():
         records.append(_make_record(
             r['doc.init_question_answer_mapped'], r['doc.final_question_answer_mapped'],
             r['doc.init_question_confidence'],
             [r['doc.first_bot_answer_mapped']], [r['bot_before_correct']], 'Human', 'duo'))
 
     # 3. LLM - duo (Exp 4, GPT-4 Turbo's own switching)
-    for _, r in medcom2_df.iterrows():
+    for _, r in exp4_human_llm_df.iterrows():
         records.append(_make_record(
             r['doc.first_bot_answer_mapped'], r['filtered_resps'], r['doc.answer_confidence_level'],
             [r['doc.init_question_answer_mapped']], [r['user_before_correct']], 'LLM', 'duo'))

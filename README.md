@@ -39,6 +39,17 @@ Analysis outputs are written to `outputs/`; the underlying experimental records 
 
 Experiment 4 selection analyses use 1,550 participant–question instances: 214 with no model response, 774 with an opening model answer but no qualifying discussion, and 562 qualifying discussions. The main PCS/performance analysis uses the 561 records with the required confidence information. Figure S6 intentionally uses the original broader calibration sample; it is not restricted to these discussions.
 
+Input filenames use the manuscript's experiment numbering:
+
+| Experiment | Main input files |
+| --- | --- |
+| 1 — LLM pairs | `data/exp1_llm_duo_per_group.csv` |
+| 2 — LLM trios | `data/exp2_llm_trio.csv` |
+| 3 — Human trios | `data/exp3_human_trios.csv` |
+| 4 — Human–LLM pairs | `data/exp4_human_llm_responses.csv`, `data/exp4_human_llm_discussions.csv` |
+
+Experiment 4's two main tables already contain only the analyzed study arm, so redundant constant arm columns are omitted. The separate Figure S6 calibration file retains its two-arm population. In `data/questions_datasets/`, `exp3_internal_medicine_2options.csv` is the text-only human-trio question set, `exp3_internal_medicine_4options_variant.csv` is its four-option variant, and `exp4_pediatrics_4options.csv` is the pediatrics question set. Historical instructions in `PROTOCOLS.md` retain the original chatbot access code; it is not an experiment name.
+
 Demographic summaries cannot be independently regenerated from this public package because demographic fields are withheld for privacy.
 
 The release excludes direct participant identifiers, demographics, wall-clock timestamps, private crosswalks, credentials, repository history and unreviewed raw exports. Third-party benchmark question wording and unrestricted copies of raw model responses are not included; the numerical model records are sufficient for the reported analyses. See `THIRD_PARTY_NOTICES.md` for benchmark sources and licence boundaries.

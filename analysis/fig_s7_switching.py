@@ -5,7 +5,7 @@ estimate confidence's average marginal effect in logistic switching models
 across human/model agents and pair/trio settings. Experiment 4's separate
 low-versus-high-confidence comparison is computed in exp4_human_llm.py.
 """
-from common import (load_medcom1, load_medcom2, load_bot_bot_duo, load_bot_bot_trio,
+from common import (load_exp3_human, load_exp4_human_llm, load_bot_bot_duo, load_bot_bot_trio,
                     build_switch_dataframe, summarise_switch_dataframe, compute_confidence_ame)
 
 
@@ -13,11 +13,11 @@ def run():
     # Exp 3 (2026-09-15): discussion trios only (controls were previously
     # pooled in), own-switching rows for the included participants only
     # (individual-level exclusion applies), partners from all three members.
-    from common import load_medcom1_trios
-    _, subj3 = load_medcom1(0.62)
+    from common import load_exp3_human_trios
+    _, subj3 = load_exp3_human(0.62)
     included3 = set(subj3.loc[subj3['control'] == 0, 'subject'])
-    _, trios_all3 = load_medcom1_trios()
-    df4 = load_medcom2()
+    _, trios_all3 = load_exp3_human_trios()
+    df4 = load_exp4_human_llm()
     parsed1, _ = load_bot_bot_duo()
     _, parsed2 = load_bot_bot_trio()
     # Preserve the original S7 covariate: any partner with a correct
@@ -26,7 +26,7 @@ def run():
     # this explicitly; no modal-answer-correctness substitution is made.
 
     rows_df = build_switch_dataframe(trios_all3, df4, parsed1, parsed2,
-                                     medcom1_include_subjects=included3)
+                                     exp3_human_include_subjects=included3)
     summary = summarise_switch_dataframe(rows_df)
     ame = compute_confidence_ame(rows_df.loc[rows_df['disagreed'] == 1])
     return rows_df, summary, ame

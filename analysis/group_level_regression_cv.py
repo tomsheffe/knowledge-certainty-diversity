@@ -31,7 +31,7 @@ import pandas as pd
 import statsmodels.formula.api as smf
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 
-from common import load_medcom1_trios, load_medcom2, aggregate_questions
+from common import load_exp3_human_trios, load_exp4_human_llm, aggregate_questions
 
 warnings.filterwarnings('ignore')  # sklearn: Exp 2 has 4 groups < 5 folds
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -84,10 +84,10 @@ def repeated(d, model, scheme, strata, rng, n_rep, pcs=None):
 def sampling_noise():
     """(observed variance of group gains, variance expected from item sampling)."""
     out = {}
-    d4 = load_medcom2()
+    d4 = load_exp4_human_llm()
     d4['diff'] = (d4['best_agent_correct_after'].astype(float)
                   - d4['best_agent_correct_before'].astype(float)) * 100
-    _, s3 = load_medcom1_trios()
+    _, s3 = load_exp3_human_trios()
     a3 = aggregate_questions(s3)
     # Trio gain: majority vote after minus before (same as the figure).
     post = (s3.groupby(['group_num', 'question_number'])['ans_end_correct']

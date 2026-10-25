@@ -2,11 +2,13 @@
 
 Blank numeric cells mean unavailable data, not incorrect answers or zero confidence. Accuracy indicators are 1/True for correct and 0/False for incorrect. Answer labels are local to each question and should not be interpreted as clinical text.
 
-## Human trios
+## Experiment 3: human trios (`exp3_human_trios.csv`)
 
 `subject`: anonymous participant; `group_num`: anonymous assigned trio; suffix `c` denotes no-discussion control and `i` intervention. `control`: original condition indicator. `question_number`: original task item. `ans_start`/`ans_end`: initial/final answer; corresponding `_correct` fields: correctness. `conf_val_start`/`conf_val_end`: self-rated confidence (1–5). `rt_start`/`rt_end`: relative response durations in milliseconds. The file includes all 60 participants × 42 items before the analysis-specific exclusion rules in `common.py`.
 
-## Human–LLM pairs
+## Experiment 4: human–LLM pairs
+
+`exp4_human_llm_responses.csv` contains the full analysis cohort; `exp4_human_llm_discussions.csv` contains its qualifying discussion records. Both contain a single study arm, so their redundant constant `group`/`doc.group` columns are omitted. This does not remove any rows. The separate Figure S6 calibration file retains `study_arm` because it intentionally includes both arms.
 
 `participant` and `release_participant`: anonymous participant identifiers shared across the full selection table, discussion table and transcript file. `opening_message_id`: anonymous identifier for a recorded opening message; joins do not depend on transcript wording. `question_number`: original pediatrics item number.
 

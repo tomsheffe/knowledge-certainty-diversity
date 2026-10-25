@@ -36,9 +36,9 @@ GROUPS = ['LLM never spoke', 'LLM answer shown', 'discussed']
 
 
 def load():
-    df = pd.read_csv(os.path.join(DATA_DIR, 'medcom2_fulldata.csv'))
-    df = df[df['group'] == 'control'].copy()        # the human-LLM arm (see PROVENANCE.md)
-    raw = pd.read_csv(os.path.join(DATA_DIR, 'medcom2_bot_post_conversation_updated.csv'))
+    df = pd.read_csv(os.path.join(DATA_DIR, 'exp4_human_llm_responses.csv'))
+    # The release already contains only the Experiment 4 analysis cohort.
+    raw = pd.read_csv(os.path.join(DATA_DIR, 'exp4_human_llm_discussions.csv'))
     key = (raw[['doc.question_number', 'opening_message_id', 'doc.init_question_answer_mapped']]
            .rename(columns={'doc.question_number': 'question_number',
                             'opening_message_id': 'opening_message_id',

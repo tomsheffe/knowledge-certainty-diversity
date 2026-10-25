@@ -7,15 +7,15 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
-def create_and_plot_confidence_heatmap(medcom1_subjects, medcom2_post_process_data, bot_bot_bot_data_parsed):
+def create_and_plot_confidence_heatmap(exp3_human_subjects, exp4_human_llm_post_process_data, bot_bot_bot_data_parsed):
     """
     Processes four distinct datasets to compare confidence and accuracy,
     and visualizes the results as a styled heatmap.
 
     Args:
-        medcom1_subjects (pd.DataFrame): Data for Human - Internal Medicine.
+        exp3_human_subjects (pd.DataFrame): Data for Human - Internal Medicine.
                                          Requires 'conf_val_start' and 'ans_start_correct' columns.
-        medcom2_post_process_data (pd.DataFrame): Data for Human & LLM - Pediatrics.
+        exp4_human_llm_post_process_data (pd.DataFrame): Data for Human & LLM - Pediatrics.
                                                   Requires 'doc.init_question_confidence',
                                                   'doc.is_correct_first_answer',
                                                   'doc.answer_confidence_level',
@@ -48,16 +48,16 @@ def create_and_plot_confidence_heatmap(medcom1_subjects, medcom2_post_process_da
     # --- 1. Data Processing ---
 
     # Create series for each dataset.
-    s_medcom1_mean, s_medcom1_count = create_confidence_accuracy_and_count_series(
-        medcom1_subjects, confidence_col="conf_val_start", accuracy_col="ans_start_correct"
+    s_exp3_human_mean, s_exp3_human_count = create_confidence_accuracy_and_count_series(
+        exp3_human_subjects, confidence_col="conf_val_start", accuracy_col="ans_start_correct"
     )
 
-    s_medcom2_human_mean, s_medcom2_human_count = create_confidence_accuracy_and_count_series(
-        medcom2_post_process_data, confidence_col="doc.init_question_confidence", accuracy_col="doc.is_correct_first_answer"
+    s_exp4_human_llm_human_mean, s_exp4_human_llm_human_count = create_confidence_accuracy_and_count_series(
+        exp4_human_llm_post_process_data, confidence_col="doc.init_question_confidence", accuracy_col="doc.is_correct_first_answer"
     )
 
-    s_medcom2_llm_mean, s_medcom2_llm_count = create_confidence_accuracy_and_count_series(
-        medcom2_post_process_data, confidence_col="doc.answer_confidence_level", accuracy_col="bot_before_correct"
+    s_exp4_human_llm_llm_mean, s_exp4_human_llm_llm_count = create_confidence_accuracy_and_count_series(
+        exp4_human_llm_post_process_data, confidence_col="doc.answer_confidence_level", accuracy_col="bot_before_correct"
     )
 
     s_botbot_mean, s_botbot_count = create_confidence_accuracy_and_count_series(
@@ -66,17 +66,17 @@ def create_and_plot_confidence_heatmap(medcom1_subjects, medcom2_post_process_da
 
     # Combine the four series into one DataFrame.
     comparison_table = pd.DataFrame({
-        "Humans \n Internal Medicine \n (Experiment 3) \n (chance level: 50%)": s_medcom1_mean,
-        "Humans \n  Pediatrics \n (Experiment 4) \n (chance level: 25%)": s_medcom2_human_mean,
-        "LLM \n Pediatrics \n (Experiment 4) \n (chance level: 25%)": s_medcom2_llm_mean,
+        "Humans \n Internal Medicine \n (Experiment 3) \n (chance level: 50%)": s_exp3_human_mean,
+        "Humans \n  Pediatrics \n (Experiment 4) \n (chance level: 25%)": s_exp4_human_llm_human_mean,
+        "LLM \n Pediatrics \n (Experiment 4) \n (chance level: 25%)": s_exp4_human_llm_llm_mean,
         "LLM \n General Medicine \n (Experiments 1+2) \n (chance level: 10–25%)": s_botbot_mean
     }, index=range(0, 6))
 
     # Create a corresponding table for counts.
     count_table = pd.DataFrame({
-       "Humans \n Internal Medicine \n (Experiment 3) \n (chance level: 50%)": s_medcom1_count,
-       "Humans \n  Pediatrics \n (Experiment 4) \n (chance level: 25%)": s_medcom2_human_count,
-       "LLM \n Pediatrics \n (Experiment 4) \n (chance level: 25%)": s_medcom2_llm_count,
+       "Humans \n Internal Medicine \n (Experiment 3) \n (chance level: 50%)": s_exp3_human_count,
+       "Humans \n  Pediatrics \n (Experiment 4) \n (chance level: 25%)": s_exp4_human_llm_human_count,
+       "LLM \n Pediatrics \n (Experiment 4) \n (chance level: 25%)": s_exp4_human_llm_llm_count,
        "LLM \n General Medicine \n (Experiments 1+2) \n (chance level: 10–25%)": s_botbot_count
     }, index=range(0, 6))
 
@@ -278,8 +278,8 @@ def plot_ame_pro(df, sort_by='AME_pp', title_text=None):
     return fig
 
 def figure_s6():
-    from common import load_medcom1, load_medcom2, load_bot_bot_trio
-    _, human3 = load_medcom1(0.62)
+    from common import load_exp3_human, load_exp4_human_llm, load_bot_bot_trio
+    _, human3 = load_exp3_human(0.62)
     from pathlib import Path
     pairs = pd.read_csv(Path(__file__).resolve().parents[1] / 'derived_data' /
                         's6_pediatrics_calibration.csv').rename(columns={

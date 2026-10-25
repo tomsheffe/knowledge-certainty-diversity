@@ -2,18 +2,19 @@
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from common import load_medcom2, load_bot_bot_duo, pair_diversity_gain
+from common import load_exp4_human_llm, load_bot_bot_duo, pair_diversity_gain
 from exp4_selection_table import load as selection_population
 
 ROOT=Path(__file__).resolve().parents[1]
 
 
 def main():
-    full=pd.read_csv(ROOT/'data/medcom2_fulldata.csv')
-    post=pd.read_csv(ROOT/'data/medcom2_bot_post_conversation_updated.csv')
+    full=pd.read_csv(ROOT/'data/exp4_human_llm_responses.csv')
+    post=pd.read_csv(ROOT/'data/exp4_human_llm_discussions.csv')
     transcripts=pd.read_csv(ROOT/'data/conversations/experiment4.csv')
     assert len(full)==1550 and full.participant.nunique()==31
-    assert len(post)==562 and len(load_medcom2())==561
+    assert 'group' not in full and 'doc.group' not in post
+    assert len(post)==562 and len(load_exp4_human_llm())==561
     assert not full.duplicated(['participant','question_number']).any()
     assert post.release_participant.notna().all()
     assert len(transcripts)==len(full)
@@ -25,7 +26,7 @@ def main():
         'discussed':562,'LLM answer shown':774,'LLM never spoke':214}
     d,_=load_bot_bot_duo()
     assert np.isclose(pair_diversity_gain(d)[0]*100,0.0,atol=1e-10)
-    assert np.isclose(pair_diversity_gain(load_medcom2())[0]*100,8.0,atol=.1)
+    assert np.isclose(pair_diversity_gain(load_exp4_human_llm())[0]*100,8.0,atol=.1)
     trio = pd.read_csv(ROOT/'data/conversations/experiment3.csv')
     assert len(trio) == 410 and int(trio.privacy_redacted.sum()) == 41
     assert int(transcripts.privacy_redacted.sum()) == 3
@@ -36,7 +37,7 @@ def main():
     assert not trio.duplicated(['group', 'question_number']).any()
     assert set(trio.question_number) == set(range(1, 43)) - {25}
     assert trio.groupby('group').size().eq(41).all()
-    human = pd.read_csv(ROOT/'data/medcom1_fulldata.csv')
+    human = pd.read_csv(ROOT/'data/exp3_human_trios.csv')
     assert set(trio['group']).issubset(set(human.group_num))
     groups = pd.read_csv(ROOT/'data/aggregated/group_level_pcs_vs_gain.csv')
     assert len(groups) == 56 and groups[['pcs', 'gain']].notna().all().all()

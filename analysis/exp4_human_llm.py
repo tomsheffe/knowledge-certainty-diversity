@@ -3,12 +3,12 @@
 import numpy as np
 from scipy.stats import ttest_rel
 from statsmodels.stats.proportion import proportions_ztest
-from common import load_medcom2, pair_diversity_gain
+from common import load_exp4_human_llm, pair_diversity_gain
 
 
 def run():
     results = {}
-    df = load_medcom2()
+    df = load_exp4_human_llm()
     results['n_items'] = len(df)
     results['n_participants'] = df['participant_id'].nunique()
     per_p_n = df.groupby('participant_id').size()

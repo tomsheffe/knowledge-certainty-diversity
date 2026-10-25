@@ -2,11 +2,11 @@
 agent as the accuracy reference. The two-panel plot compares Experiments 1
 and 4; this numerical helper reports Experiment 4's PCS and per-level table.
 """
-from common import load_medcom2, pair_diversity_gain, multi_confidence_pcs
+from common import load_exp4_human_llm, pair_diversity_gain, multi_confidence_pcs
 
 
 def run():
-    df = load_medcom2()
+    df = load_exp4_human_llm()
     # S9 changes the conditioning confidence, while retaining the initially
     # better agent as the accuracy reference. Swapping accuracies changes
     # the estimand and incorrectly gives 26.74 pp instead of 2.50 pp.

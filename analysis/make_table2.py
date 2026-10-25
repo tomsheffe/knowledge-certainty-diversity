@@ -20,7 +20,7 @@ import pcs_uncertainty_and_null as unc
 import pcs_setting_level_cv as cv
 import fig_s5_multiconfidence as s5
 import exp1_llm_pairs, exp2_llm_trios, exp3_human_trios
-from common import load_medcom2, load_medcom1_trios
+from common import load_exp4_human_llm, load_exp3_human_trios
 from scipy.stats import ttest_rel
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -48,7 +48,7 @@ def build():
     base = reference_accuracy()
     m = s5.run()
     e1, e2, e3 = exp1_llm_pairs.run(), exp2_llm_trios.run(), exp3_human_trios.run()
-    d4 = load_medcom2()
+    d4 = load_exp4_human_llm()
     # Exp 4 reference-agent change: item-pooled means (as in Fig. 3C); paired test across the 30 pairs
     from scipy.stats import ttest_rel
     agg4 = d4.groupby('participant_id').agg(pre=('best_agent_correct_before', 'mean'),
@@ -65,7 +65,7 @@ def build():
     # 10 trios. Exp 2: one configuration, no test.
     e2_post_mean = e2['majority_post']
     e2_maj = e2['majority_pre']
-    _, interv3 = load_medcom1_trios()                # trio-level: all members (2026-09-15)
+    _, interv3 = load_exp3_human_trios()                # trio-level: all members (2026-09-15)
     per_item3 = interv3.groupby(['group_num', 'question_number']).agg(
         post=('ans_end_correct', lambda x: float(x.mean() > 0.5)),
         maj=('ans_start_correct', lambda x: float(x.mean() > 0.5)))

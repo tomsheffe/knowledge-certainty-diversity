@@ -16,7 +16,7 @@ experiment. p = P(PCS_null >= PCS_observed).
 """
 import numpy as np
 import pandas as pd
-from common import (load_bot_bot_duo, load_bot_bot_trio, load_medcom1, load_medcom2,
+from common import (load_bot_bot_duo, load_bot_bot_trio, load_exp3_human, load_exp4_human_llm,
                     aggregate_questions, aggregate_by_rebel_conf,
                     pair_diversity_gain, trio_diversity_gain)
 
@@ -115,8 +115,8 @@ def run():
     results['exp2'] = dict(obs=obs, boot=boot, null=null, n=len(aq2))
 
     # --- Exp 3: human trios (cluster bootstrap by trio) ---
-    from common import load_medcom1_trios
-    _, interv3 = load_medcom1_trios()                # trio-level: all members (2026-09-15)
+    from common import load_exp3_human_trios
+    _, interv3 = load_exp3_human_trios()                # trio-level: all members (2026-09-15)
     aq3 = aggregate_questions(interv3)
     obs = trio_diversity_gain(aggregate_by_rebel_conf(aq3)) * 100
     boot = bootstrap_trios_clustered(aq3, 'group_num')
@@ -124,7 +124,7 @@ def run():
     results['exp3'] = dict(obs=obs, boot=boot, null=null, n=len(aq3))
 
     # --- Exp 4: human-LLM pairs (cluster bootstrap by participant) ---
-    d4 = load_medcom2()
+    d4 = load_exp4_human_llm()
     obs = pair_diversity_gain(d4, filter_occurrences=0)[0] * 100
     boot = bootstrap_pairs_clustered(d4, 'participant_id')
     null = permutation_null_pairs(d4, 'best_agent_confidence')
