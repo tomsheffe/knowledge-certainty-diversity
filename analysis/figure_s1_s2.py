@@ -17,19 +17,33 @@ def main():
     data = pd.read_csv(ROOT / 'derived_data/s1_s2_temperature_confidence.csv')
     assert not data.duplicated(['item_id', 'model', 'temperature']).any()
     assert data.groupby(['model', 'temperature']).size().eq(200).all()
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4), sharey=True)
-    for ax, (model, label) in zip(axes, LABELS.items()):
-        for temp, frame in data[data.model.eq(model)].groupby('temperature'):
-            stats = frame.groupby('confidence').is_correct.agg(['mean', 'count'])
-            ax.plot(stats.index, stats['mean'] * 100, 'o-', label=f'T={temp:g}')
-        ax.set(title=label, xlabel='Confidence', xlim=(1, 5), ylim=(0, 100))
-        ax.set_xticks(range(1, 6))
-        ax.grid(alpha=.2)
-    axes[0].set_ylabel('Accuracy (%)')
-    axes[-1].legend()
-    fig.tight_layout()
-    fig.savefig(OUT / 'figure_s1.png', dpi=300)
-    plt.close(fig)
+    # Retain the published calibration panel layout and temperature colors.
+    with plt.style.context('ggplot'):
+        fig, axes = plt.subplots(1, 3, figsize=(22, 7))
+        colors = {0.2: '#ff3b23', 0.5: '#0095bf', 0.8: '#998bdd'}
+        titles = ['Gemini-2.5-pro', 'Opus-4', 'Gpt-4.1']
+        for ax, (model, label), title in zip(axes, LABELS.items(), titles):
+            for temp, frame in data[data.model.eq(model)].groupby('temperature'):
+                stats = frame.groupby('confidence').is_correct.agg(['mean', 'count'])
+                ax.plot(stats.index, stats['mean'], 'o-', color=colors[temp],
+                        linewidth=2.5, markersize=7, label=f'T={temp:g}')
+            ax.plot([1, 5], [.2, 1], '--', linewidth=1.2, color=colors[.2])
+            ax.set(xlim=(1, 5), ylim=(0, 1))
+            ax.set_xticks(range(1, 6))
+            ax.set_title(title, fontsize=24, fontweight='bold')
+            ax.set_xlabel('Mean confidence (1–5)', fontsize=20, fontweight='bold')
+            ax.tick_params(axis='both', labelsize=18)
+            ax.grid(True, linestyle=':')
+        axes[0].set_ylabel('Accuracy', fontsize=20, fontweight='bold')
+        handles, labels = axes[0].get_legend_handles_labels()
+        fig.legend(handles, labels, loc='upper center', ncol=3,
+                   bbox_to_anchor=(.5, .90), frameon=False, title='Temperature',
+                   title_fontsize=24, fontsize=24)
+        fig.suptitle('Calibration by Temperature (1–5 confidence)',
+                     fontsize=34, fontweight='bold', y=.98)
+        fig.tight_layout(rect=[0, 0, 1, .84])
+        fig.savefig(OUT / 'figure_s1.png', dpi=300)
+        plt.close(fig)
     fig, axes = plt.subplots(2, 3, figsize=(15, 9))
     results = []
     for col, (model, label) in enumerate(LABELS.items()):

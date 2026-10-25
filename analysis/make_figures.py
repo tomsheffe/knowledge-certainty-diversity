@@ -185,6 +185,8 @@ def make_figure_3():
     fig, axs = plt.subplots(2, 2, figsize=(20, 18))
     plot_diversity_plots(df4, ax=axs[0, 0], include_ytitle_right=False, info=A)
     axs[0, 0].set_title('A. Human-LLM Pairs', fontsize=27, fontweight='bold')
+    # Keep the legend clear of the confidence-0 estimate and its interval.
+    axs[0, 0].legend(prop={'size': 17, 'weight': 'bold'}, loc='upper left', ncol=2)
     plot_rebel_coalition_accuracies(agg_conf3, ax=axs[0, 1], include_ytitle_left=False, info=B,
                                     items=agg_q3, interval='wilson')
     axs[0, 1].set_title('B. Human Trios', fontsize=27, fontweight='bold')

@@ -106,7 +106,7 @@ STYLE = {  # marker, colour
 
 
 def plot(df, pooled, path):
-    fig, ax = plt.subplots(figsize=(7.5, 6))
+    fig, ax = plt.subplots(figsize=(7.5, 6.7))
     for label, (m, c) in STYLE.items():
         g = df[df['setting'] == label]
         ax.scatter(g['pcs'], g['gain'], marker=m, s=45, color=c, alpha=0.6,
@@ -124,7 +124,8 @@ def plot(df, pooled, path):
             label=f'OLS fit, all groups (slope {slope:.2f})')
     ax.set_xlabel('Potential Conversation Synergy of the group (pp)')
     ax.set_ylabel('Observed gain after discussion (pp)')
-    ax.legend(frameon=False, fontsize=9, loc='upper left')
+    ax.legend(frameon=False, fontsize=9, loc='lower left',
+              bbox_to_anchor=(0, 1.02), borderaxespad=0, ncol=2)
     fig.tight_layout()
     fig.savefig(path, dpi=200)
 
