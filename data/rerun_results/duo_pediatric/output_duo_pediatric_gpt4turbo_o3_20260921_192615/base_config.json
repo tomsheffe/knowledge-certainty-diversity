@@ -1,0 +1,12 @@
+{
+  "persons": [
+    {
+      "name": "David",
+      "tag": "gpt-4-turbo"
+    },
+    {
+      "name": "John",
+      "tag": "o3-2025-04-16"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "persons": [
+    {
+      "name": "David",
+      "tag": "claude-opus-4-5-20251101"
+    },
+    {
+      "name": "John",
+      "tag": "o3-2025-04-16"
+    }
+  ]
+}

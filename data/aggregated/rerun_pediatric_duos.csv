@@ -1,0 +1,2 @@
+config,n_items,reference,partner,ref_pre,ref_post,par_pre,par_post,ref_conf_top,disagreement,pcs,pcs_lo,pcs_hi
+output_duo_pediatric_gpt4turbo_o3_20260921_192615,50,o3-2025-04-16,gpt-4-turbo,90.8,90.0,86.39999999999999,90.0,94.0,18.0,0.4,0.0,5.999999999999997

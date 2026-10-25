@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "Please cite the associated manuscript when using these code and data."
+title: "Knowledge-Certainty Diversity Predicts Human-Human and Human-AI Open-Ended Discussion Synergy and Reveals Pure-AI Discussion Shortfalls"
+type: software
+authors:
+  - family-names: Sheffer
+    given-names: Tom
+  - family-names: Miron
+    given-names: Alon
+  - family-names: Sklar
+    given-names: Asael
+  - family-names: Dover
+    given-names: Yaniv
+  - family-names: Goldstein
+    given-names: Ariel
+license: MIT
+repository-code: "https://github.com/tomsheffe/knowledge-certainty-diversity"
